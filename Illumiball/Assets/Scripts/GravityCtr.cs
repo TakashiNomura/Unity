@@ -18,19 +18,26 @@ public class GravityCtr : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		Vector3 vector = new Vector3();
-
-		// キー入力からベクトルを設定
-		vector.x = Input.GetAxis("Horizontal");
-		vector.z = Input.GetAxis("Vertical");
-
-		// 高さ方向判定はキーのzとする
-		if(Input.GetKey("z"))
+		if(Application.isEditor)
 		{
-			vector.y = 1.0f;
-		} else {
-			vector.y = -1.0f;
-		}
 
+			// キー入力からベクトルを設定
+			vector.x = Input.GetAxis("Horizontal");
+			vector.z = Input.GetAxis("Vertical");
+
+			// 高さ方向判定はキーのzとする
+			if(Input.GetKey("z"))
+			{
+				vector.y = 1.0f;
+			} else {
+				vector.y = -1.0f;
+			}
+		} else {
+			// 加速度センサーの入力をUnity空間の軸にマッピング
+			vector.x = Input.acceleration.x;
+			vector.y = Input.acceleration.y;
+			vector.z = Input.acceleration.z;
+		}
 		// シーンの重力を入力ベクトルの方向に合わせて変化させる
 		Physics.gravity = Gravity * vector.normalized * gravityScale;
 	}
